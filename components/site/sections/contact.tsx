@@ -37,32 +37,11 @@ export function Contact() {
         body: JSON.stringify(values),
       });
 
-<<<<<<< HEAD
       const data = (await response.json().catch(() => null)) as {
         error?: string;
-        fallbackUrl?: string;
-        warning?: string;
       } | null;
 
       if (!response.ok) {
-        throw new Error(data?.error ?? "Failed to send message");
-      }
-
-      if (data?.fallbackUrl) {
-        window.location.href = data.fallbackUrl;
-      }
-
-      form.reset();
-      push({
-        title: "Message sent",
-        description: data?.fallbackUrl
-          ? "Your email app opened with a prefilled message."
-          : "Thanks for reaching out. I will reply within 24 hours.",
-=======
-      if (!response.ok) {
-        const data = (await response.json().catch(() => null)) as {
-          error?: string;
-        } | null;
         throw new Error(data?.error ?? "Failed to send message");
       }
 
@@ -70,7 +49,6 @@ export function Contact() {
       push({
         title: "Message sent",
         description: "Thanks for reaching out. I will reply within 24 hours.",
->>>>>>> be29bc158e5b3142311e657976e0154968126454
         variant: "success",
       });
     } catch (error) {

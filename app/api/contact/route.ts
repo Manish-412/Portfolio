@@ -3,34 +3,11 @@ import { Resend } from "resend";
 import { contactSchema } from "@/lib/validations";
 import { buildContactEmail } from "@/lib/email-template";
 import { rateLimit } from "@/lib/rate-limit";
-import { siteConfig } from "@/lib/data";
 
 function getErrorMessage(error: unknown) {
   if (error instanceof Error) return error.message;
   if (typeof error === "string") return error;
   return "Unknown email delivery error";
-}
-
-function buildMailtoUrl(payload: {
-  name: string;
-  email: string;
-  subject: string;
-  message: string;
-  company?: string;
-}) {
-  const recipient = process.env.CONTACT_EMAIL?.trim() || siteConfig.email;
-  const lines = [
-    `Name: ${payload.name}`,
-    `Email: ${payload.email}`,
-    `Company: ${payload.company?.trim() || "Not provided"}`,
-    "",
-    payload.message,
-  ];
-
-  const mailSubject = encodeURIComponent(`Portfolio inquiry: ${payload.subject}`);
-  const mailBody = encodeURIComponent(lines.join("\n"));
-
-  return `mailto:${recipient}?subject=${mailSubject}&body=${mailBody}`;
 }
 
 export async function POST(request: Request) {
@@ -68,10 +45,11 @@ export async function POST(request: Request) {
   const fromEmail =
     process.env.RESEND_FROM_EMAIL?.trim() ?? "Portfolio <onboarding@resend.dev>";
 
-  const fallbackUrl = buildMailtoUrl(parsed.data);
-
   if (!resendApiKey || !contactEmail) {
-    return NextResponse.json({ ok: true, fallbackUrl });
+    return NextResponse.json(
+      { error: "Email service not configured." },
+      { status: 500 }
+    );
   }
 
   const email = buildContactEmail(parsed.data);
@@ -91,13 +69,14 @@ export async function POST(request: Request) {
     const message = getErrorMessage(error);
     console.error("Contact form email delivery failed:", message);
 
-    return NextResponse.json({
-      ok: true,
-      fallbackUrl,
-      warning:
-        process.env.NODE_ENV === "development"
-          ? message
-          : "Failed to send email directly, so the form is opening your email app instead.",
-    });
+    return NextResponse.json(
+      {
+        error:
+          process.env.NODE_ENV === "development"
+            ? message
+            : "Failed to send email. Please try again.",
+      },
+      { status: 500 }
+    );
   }
 }
