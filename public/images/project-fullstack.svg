@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540">
+  <defs>
+    <linearGradient id="p2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1220" />
+      <stop offset="1" stop-color="#101827" />
+    </linearGradient>
+    <linearGradient id="a2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#22d3ee" />
+      <stop offset="1" stop-color="#3b82f6" />
+    </linearGradient>
+  </defs>
+  <rect width="960" height="540" rx="40" fill="url(#p2)" />
+  <rect x="90" y="120" width="260" height="220" rx="24" fill="url(#a2)" opacity="0.3" />
+  <rect x="380" y="80" width="300" height="260" rx="24" fill="url(#a2)" opacity="0.4" />
+  <rect x="700" y="170" width="170" height="180" rx="24" fill="url(#a2)" opacity="0.25" />
+  <text x="72" y="460" fill="#e2e8f0" font-family="Space Grotesk, sans-serif" font-size="34" font-weight="600">Full Stack Product Platform</text>
+</svg>
